@@ -21,7 +21,6 @@
 
     <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-7xl w-full">
         
-        <!-- El logo en la PÁGINA WEB se carga dinámicamente con JS ahora -->
         <div id="logoContainer" class="flex justify-center mb-6 h-16"></div>
 
         <h1 class="text-3xl font-extrabold text-center text-afore-blue mb-4">
@@ -47,7 +46,6 @@
                 </label>
                 <select id="stageSelect" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-white focus:ring-blue-500 focus:border-blue-500 transition-all">
                     
-
 </select>
             </div>
 
@@ -69,17 +67,20 @@
     </div> 
 
 <script type="module">
-        // --- (Iconos SVG como Path2D) ---
-        const ICONS = {
-            search: new Path2D("M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"), // 1. Revisión
-            chart: new Path2D("M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6zM13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"), // 2. Análisis
-            folder: new Path2D("M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"), // 3. Recopilación
-            badge: new Path2D("M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"), // 4. Concluido
-            user: new Path2D("M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"), // 5. Actualización Info
-            cash: new Path2D("M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.75C2.25 5.25 2.25 5.25 2.25 5.25v-.75C2.25 4.5 3 4.5 3 4.5h.75A.75.75 0 014.5 5.25v.75h-.75m0 0H3m1.5 0H1.5m0 0h.75m1.5 0h.75m10.5-1.5V6a.75.75 0 00-.75-.75h-.75m0 0v.75c0 .414 0 .414 0 .414v.75c0 .414.75.414.75.414h.75a.75.75 0 00.75-.75V6h-.75m0 0h.75M12 12.75h.008v.008H12v-.008zM12 15h.008v.008H12v-.008zM12 17.25h.008v.008H12v-.008zM15 12.75h.008v.008H15v-.008zM15 15h.008v.008H15v-.008zM15 17.25h.008v.008H15v-.008zM18 12.75h.008v.008H18v-.008zM18 15h.008v.008H18v-.008zM18 17.25h.008v.008H18v-.008zM21.75 9v.75a.75.75 0 01-.75.75h-.75m0 0v.75c0 .414 0 .414 0 .414v.75c0 .414.75.414.75.414h.75a.75.75 0 00.75-.75v-.75h-.75m0 0h.75m-1.5 0h.75M3.75 9v.75a.75.75 0 01-.75.75h-.75m0 0v.75c0 .414 0 .414 0 .414v.75c0 .414.75.414.75.414h.75a.75.75 0 00.75-.75v-.75h-.75m0 0h.75m-1.5 0h.75"), // 6. Actualización Saldos
-            flag: new Path2D("M3 3v1.5M3 21v-6m0 0l2.77-.693a9 9 0 016.208.682l.108.054a9 9 0 006.086.71l3.114-.732a48.524 48.524 0 01-.005-10.499l-3.11.732a9 9 0 01-6.085-.711l-.108-.054a9 9 0 00-6.208-.682L3 4.5M3 15V4.5"), // 7. Etapa Final
-            envelope: new Path2D("M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75") // 8. Notificación
+        // --- ¡NUEVO! Definición de rutas de los Stickers ---
+        // Estas rutas coinciden con la carpeta que subiste
+        const STICKER_PATHS = {
+            etapa1: 'Lineadeltiemposeparacion/etapa-1.svg', // 1. Revisión
+            etapa2: 'Lineadeltiemposeparacion/etapa-2.svg', // 2. Análisis
+            etapa3: 'Lineadeltiemposeparacion/etapa-3.svg', // 3. Recopilación
+            etapa4: 'Lineadeltiemposeparacion/etapa-4.svg', // 4. Concluido
+            etapa5: 'Lineadeltiemposeparacion/etapa-5.svg', // 5. Actualización Info
+            etapa6: 'Lineadeltiemposeparacion/etapa-6.svg', // 6. Actualización Saldos
+            etapa7: 'Lineadeltiemposeparacion/etapa-7.svg', // 7. Etapa Final
+            etapa8: 'Lineadeltiemposeparacion/etapa-8.svg'  // 8. Notificación
         };
+        // Aquí guardaremos los objetos Image cargados
+        const STICKER_IMAGES = {};
 
         // --- Icono de Foco Personalizado ---
         const CUSTOM_ICON_LIGHTBULB = {
@@ -92,8 +93,8 @@
             rect: { x: 17.5781, y: 87.8418, width: 47.3682, height: 2.36841 }
         };
 
-        // --- NUEVO! LOGO SVG COMO STRING ---
-        // Aquí está el código SVG completo que proporcionaste
+        // --- LOGO SVG COMO STRING ---
+        // (El logo principal sigue incrustado, como estaba)
         const LOGO_SVG_STRING = `<?xml version="1.0" encoding="UTF-8"?>
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="510" height="146">
 <path d="M0 0 C168.3 0 336.6 0 510 0 C510 48.18 510 96.36 510 146 C341.7 146 173.4 146 0 146 C0 97.82 0 49.64 0 0 Z " fill="#FEFEFE" transform="translate(0,0)"/>
@@ -123,19 +124,20 @@
 <path d="M0 0 C0.66 0.33 1.32 0.66 2 1 C1.360625 1.556875 0.72125 2.11375 0.0625 2.6875 C-2.19680987 5.22066561 -2.63149047 6.68341424 -3 10 C-3.33 10 -3.66 10 -4 10 C-4.25 7.25 -4.25 7.25 -4 4 C-2 1.625 -2 1.625 0 0 Z " fill="#F7DA45" transform="translate(109,62)"/>
 </svg>`;
         
-        // --- NUEVO! Objeto Imagen para el Logo ---
+        // --- Objeto Imagen para el Logo ---
         const logoImage = new Image();
 
         // --- CONFIGURACIÓN DE LA LÍNEA DE TIEMPO (V3 - DISEÑO DE PANEL) ---
+        // --- ¡MODIFICADO! 'icon' ahora es una clave (string) de STICKER_PATHS ---
         const STAGES = [
-            { id: 1, name: "1", longName: "Revisión del Trámite.", icon: ICONS.search, desc: "Estamos validando que la documentación que proporcionaste esté completa y cumpla con los requisitos necesarios para poder iniciar el proceso de separación de cuentas." },
-            { id: 2, name: "2", longName: "Proceso de Análisis para determinar posible invasión.", icon: ICONS.chart, desc: "Tu cuenta se encuentra en la etapa de análisis para determinar si existe alguna invasión de datos o de recursos." },
-            { id: 3, name: "3", longName: "Recopilación de la información.", icon: ICONS.folder, desc: "Estamos en espera de recabar información histórica de tu cuenta individual por parte de otras administradoras." },
-            { id: 4, name: "4", longName: "Análisis concluído (procedente/no procedente).", icon: ICONS.badge, desc: "Se ha concluido el ánalisis de tu trámite, el cual se ha determinado como procedente/no procedente." },
-            { id: 5, name: "5", longName: "Actualización de la información de la cuenta individual.", icon: ICONS.user, desc: "Tu trámite se encuentra en la etapa de actualización de datos con base a lo confirmado en tu solicitud." },
-            { id: 6, name: "6", longName: "Actualización de saldos de la cuenta individual.", icon: ICONS.cash, desc: "Nos encontramos actualizando los saldos de tu cuenta individual considerando la totalidad de los recursos identificados." },
-            { id: 7, name: "7", longName: "Etapa final del proceso de Separación de Cuentas.", icon: ICONS.flag, desc: "Tu trámite ya está en la etapa final del proceso de separación de cuentas." },
-            { id: 8, name: "8", longName: "Notificación de Conclusión de Separación de Cuentas.", icon: ICONS.envelope, desc: "Tu trámite ha concluido exitosamente. Se genera una constancia de conclusión." }
+            { id: 1, name: "1", longName: "Revisión del Trámite.", icon: 'etapa1', desc: "Estamos validando que la documentación que proporcionaste esté completa y cumpla con los requisitos necesarios para poder iniciar el proceso de separación de cuentas." },
+            { id: 2, name: "2", longName: "Proceso de Análisis para determinar posible invasión.", icon: 'etapa2', desc: "Tu cuenta se encuentra en la etapa de análisis para determinar si existe alguna invasión de datos o de recursos." },
+            { id: 3, name: "3", longName: "Recopilación de la información.", icon: 'etapa3', desc: "Estamos en espera de recabar información histórica de tu cuenta individual por parte de otras administradoras." },
+            { id: 4, name: "4", longName: "Análisis concluído (procedente/no procedente).", icon: 'etapa4', desc: "Se ha concluido el ánalisis de tu trámite, el cual se ha determinado como procedente/no procedente." },
+            { id: 5, name: "5", longName: "Actualización de la información de la cuenta individual.", icon: 'etapa5', desc: "Tu trámite se encuentra en la etapa de actualización de datos con base a lo confirmado en tu solicitud." },
+            { id: 6, name: "6", longName: "Actualización de saldos de la cuenta individual.", icon: 'etapa6', desc: "Nos encontramos actualizando los saldos de tu cuenta individual considerando la totalidad de los recursos identificados." },
+            { id: 7, name: "7", longName: "Etapa final del proceso de Separación de Cuentas.", icon: 'etapa7', desc: "Tu trámite ya está en la etapa final del proceso de separación de cuentas." },
+            { id: 8, name: "8", longName: "Notificación de Conclusión de Separación de Cuentas.", icon: 'etapa8', desc: "Tu trámite ha concluido exitosamente. Se genera una constancia de conclusión." }
         ];
 
         // --- CONSTANTES DE DIBUJO (V3) ---
@@ -154,7 +156,7 @@
         const NOTE_TEXT = "Es importante tener en cuenta que el tiempo estimado para el proceso la Separación de Cuentas es de aproximadamente 30 días hábiles. Sin embargo, te informamos que este periodo podría extenderse en caso de que los institutos involucrados requieran un tiempo adicional para completar las validaciones necesarias.";
 
 
-        // Colores y Fuentes (¡Actualizados con colores Afore Coppel!)
+        // Colores y Fuentes
         const COLORS = {
             BG: '#FFFFFF', // Fondo blanco
             TEXT_PRIMARY: '#003366', // Azul oscuro de Afore Coppel
@@ -196,31 +198,49 @@
             const downloadBtn = document.getElementById('downloadBtn');
             const logoContainer = document.getElementById('logoContainer');
 
-            // --- LÓGICA DE CARGA DEL LOGO (Infalible) ---
-            // 1. Crear la URL de datos a partir del string SVG
-            // Usamos encodeURIComponent para manejar caracteres especiales de forma segura
+            // --- ¡NUEVO! LÓGICA DE PRE-CARGA DE IMÁGENES (Logo + 8 Stickers) ---
+
+            // Total de imágenes a cargar: 1 logo + el número de stickers
+            const totalImages = 1 + Object.keys(STICKER_PATHS).length;
+            let imagesLoaded = 0;
+
+            // Esta función se llamará CADA VEZ que una imagen (logo O sticker) termine de cargar
+            function onImageLoaded() {
+                imagesLoaded++;
+                
+                // Solo cuando TODAS las imágenes estén listas, habilitamos la app
+                if (imagesLoaded === totalImages) {
+                    generateBtn.disabled = false;
+                    generateBtn.textContent = "1. Generar Imagen";
+                    // Dibujar el estado inicial
+                    drawTimeline(nameInput.value || "Juan Pérez", stageSelect.value || 3, logoImage);
+                }
+            }
+
+            // 1. Configurar y cargar el LOGO PRINCIPAL
             const logoDataUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(LOGO_SVG_STRING);
-            
-            // 2. Asignar la URL al objeto Imagen y al contenedor HTML
+            logoImage.onload = onImageLoaded; // Asignar nuestro contador
+            logoImage.onerror = () => {
+                console.error("Error al cargar el logo SVG principal.");
+                onImageLoaded(); // Aun si falla, contamos para no bloquear la app
+            };
             logoImage.src = logoDataUrl;
             logoContainer.innerHTML = `<img src="${logoDataUrl}" alt="Logo Afore Coppel" class="h-16 object-contain">`;
-
-            // 3. Manejador OnLoad: Habilitar todo cuando el logo esté listo
-            logoImage.onload = () => {
-                generateBtn.disabled = false;
-                generateBtn.textContent = "1. Generar Imagen";
-                // Dibujar el estado inicial
-                drawTimeline(nameInput.value || "Juan Pérez", stageSelect.value || 3, logoImage);
-            };
             
-            // 4. Manejador OnError (contingencia)
-            logoImage.onerror = (err) => {
-                console.error("Error al cargar el logo SVG desde la Data URL:", err);
-                generateBtn.disabled = false;
-                generateBtn.textContent = "Generar (Sin Logo)";
-                // Dibujar el estado inicial sin el logo
-                drawTimeline(nameInput.value || "Juan Pérez", stageSelect.value || 3, null);
-            };
+            // 2. Configurar y cargar los 8 STICKERS
+            for (const key in STICKER_PATHS) {
+                const path = STICKER_PATHS[key];
+                const img = new Image();
+                img.onload = onImageLoaded; // Asignar el mismo contador
+                img.onerror = () => {
+                    console.error(`Error al cargar el sticker: ${path}`);
+                    onImageLoaded(); // Aun si falla, contamos
+                };
+                img.src = path;
+                STICKER_IMAGES[key] = img; // Guardamos la imagen en nuestro objeto global
+            }
+            
+            // --- FIN DE LA LÓGICA DE PRE-CARGA ---
 
 
             // 1. Llenamos el menú <select> con las etapas
@@ -273,22 +293,31 @@
                 ctx.restore();
             }
 
-            // --- Función para dibujar Íconos SVG (Path2D) ---
-            function drawIcon(ctx, path, x, y, size, color) {
+            // --- ¡MODIFICADO! Función para dibujar STICKERS (Image) ---
+            // Ahora recibe la 'imageKey' (ej: 'etapa1') en lugar de un Path2D
+            function drawIcon(ctx, imageKey, x, y, size) {
+                const img = STICKER_IMAGES[imageKey];
+                
+                // Verificación por si la imagen no se cargó
+                if (!img || img.width === 0) {
+                    console.warn(`La imagen del sticker "${imageKey}" no se pudo dibujar.`);
+                    // Opcional: dibujar un recuadro gris como placeholder
+                    ctx.save();
+                    ctx.fillStyle = '#E5E7EB';
+                    ctx.fillRect(x - size / 2, y - size / 2, size, size);
+                    ctx.restore();
+                    return;
+                }
+
                 ctx.save();
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 2; // Grosor del ícono
-                ctx.translate(x - size / 2, y - size / 2); // Centrar el ícono en X, Y
-                
-                // Escalar el ícono - los paths de Heroicons son de 24x24
-                const scale = size / 24;
-                ctx.scale(scale, scale); 
-                
-                ctx.stroke(path); // Dibujar el path
+                // Dibuja la imagen centrada en el punto X, Y
+                const drawX = x - size / 2;
+                const drawY = y - size / 2;
+                ctx.drawImage(img, drawX, drawY, size, size);
                 ctx.restore();
             }
 
-            // --- Función para dibujar el Foco Personalizado ---
+            // --- Función para dibujar el Foco Personalizado (Sin cambios) ---
             function drawCustomLightbulbIcon(ctx, x, y, size) {
                 ctx.save();
 
@@ -335,10 +364,10 @@
             }
 
 
-            // --- Función para dibujar las flechas de flujo ---
+            // --- Función para dibujar las flechas de flujo (Sin cambios) ---
             function drawFlowArrows(ctx, activeStageId) {
                 ctx.save();
-        
+            
                 for (let i = 0; i < STAGES.length - 1; i++) {
                     const colA = i % NUM_COLS;
                     const rowA = Math.floor(i / NUM_COLS);
@@ -498,17 +527,16 @@
                     // --- Lógica de Icono / Checkmark ---
                     const iconX = cardX + CARD_WIDTH - 30;
                     const iconY = contentY + 5;
-                    const iconSize = 24;
+                    // ¡MODIFICADO! Aumentamos el tamaño para que los stickers luzcan mejor
+                    const iconSize = 32; 
 
                     if (stage.id < activeStageId) {
                         // Etapa Completada: Dibuja Checkmark
-                        drawCheckmark(ctx, iconX, iconY, iconSize);
-                    } else if (stage.id === activeStageId) {
-                        // Etapa Activa: Dibuja Icono temático en color Activo
-                        drawIcon(ctx, stage.icon, iconX, iconY, iconSize, COLORS.ACTIVE_STROKE);
+                        drawCheckmark(ctx, iconX, iconY, 24); // Mantenemos el check pequeño
                     } else {
-                        // Etapa Futura: Dibuja Icono temático en color Futuro
-                        drawIcon(ctx, stage.icon, iconX, iconY, iconSize, COLORS.LINE);
+                        // Etapa Activa o Futura: Dibuja el STICKER
+                        // La función 'drawIcon' ya no necesita el color
+                        drawIcon(ctx, stage.icon, iconX, iconY, iconSize);
                     }
 
 
@@ -615,8 +643,7 @@
                 downloadBtn.classList.add('block');
             });
 
-            // El dibujado inicial se llama desde logoImage.onload
-            // drawTimeline("Juan Pérez", 3);
+            // El dibujado inicial AHORA se llama desde onImageLoaded
             
             // Polyfill para roundRect si el navegador no lo soporta
             if (CanvasRenderingContext2D.prototype.roundRect === undefined) {
@@ -645,4 +672,3 @@
 
 </body>
 </html>
-
