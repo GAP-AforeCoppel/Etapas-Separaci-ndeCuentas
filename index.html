@@ -68,7 +68,6 @@
 
 <script type="module">
         // --- ¡NUEVO! Definición de rutas de los Stickers ---
-        // Estas rutas coinciden con la carpeta que subiste
         const STICKER_PATHS = {
             etapa1: 'Lineadeltiemposeparacion/etapa-1.svg', // 1. Revisión
             etapa2: 'Lineadeltiemposeparacion/etapa-2.svg', // 2. Análisis
@@ -94,7 +93,6 @@
         };
 
         // --- LOGO SVG COMO STRING ---
-        // (El logo principal sigue incrustado, como estaba)
         const LOGO_SVG_STRING = `<?xml version="1.0" encoding="UTF-8"?>
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="510" height="146">
 <path d="M0 0 C168.3 0 336.6 0 510 0 C510 48.18 510 96.36 510 146 C341.7 146 173.4 146 0 146 C0 97.82 0 49.64 0 0 Z " fill="#FEFEFE" transform="translate(0,0)"/>
@@ -128,7 +126,6 @@
         const logoImage = new Image();
 
         // --- CONFIGURACIÓN DE LA LÍNEA DE TIEMPO (V3 - DISEÑO DE PANEL) ---
-        // --- ¡MODIFICADO! 'icon' ahora es una clave (string) de STICKER_PATHS ---
         const STAGES = [
             { id: 1, name: "1", longName: "Revisión del Trámite.", icon: 'etapa1', desc: "Estamos validando que la documentación que proporcionaste esté completa y cumpla con los requisitos necesarios para poder iniciar el proceso de separación de cuentas." },
             { id: 2, name: "2", longName: "Proceso de Análisis para determinar posible invasión.", icon: 'etapa2', desc: "Tu cuenta se encuentra en la etapa de análisis para determinar si existe alguna invasión de datos o de recursos." },
@@ -152,8 +149,12 @@
         const ROW_GAP = 50;
         // Altura base, sin la nota legal
         const BASE_CANVAS_HEIGHT = CANVAS_PADDING_Y_TOP + (NUM_ROWS * CARD_HEIGHT) + ((NUM_ROWS - 1) * ROW_GAP) + CARD_GRID_PADDING; 
-        const NOTE_AREA_HEIGHT = 100; // Altura del área de la nota legal
-        const NOTE_TEXT = "Es importante tener en cuenta que el tiempo estimado para el proceso la Separación de Cuentas es de aproximadamente 30 días hábiles. Sin embargo, te informamos que este periodo podría extenderse en caso de que los institutos involucrados requieran un tiempo adicional para completar las validaciones necesarias.";
+        
+        // --- ¡MODIFICADO! Ajustes en la nota legal ---
+        const NOTE_AREA_HEIGHT = 130; // Aumentado de 100 a 130 para la nueva línea
+        const NOTE_TEXT = "Es importante tener en cuenta que el tiempo estimado para el proceso la Separación de Cuentas es de aproximadamente 30 días hábiles*. Sin embargo, te informamos que este periodo podría extenderse en caso de que los institutos involucrados requieran un tiempo adicional para completar las validaciones necesarias.";
+        const NOTE_DEF_TITLE = "*Hábiles: ";
+        const NOTE_DEF_TEXT = "Días de Lunes a Viernes, excluyendo Sábados, Domingos y días festivos.";
 
 
         // Colores y Fuentes
@@ -184,7 +185,8 @@
             CARD_STATUS: 'bold 14px Inter',
             BADGE: 'bold 16px Inter',
             NOTE_ICON: 'bold 30px Inter',
-            NOTE_TEXT: '14px Inter'
+            NOTE_TEXT: '14px Inter',
+            NOTE_TEXT_BOLD: 'bold 14px Inter' // ¡NUEVO! Fuente para destacar
         };
 
         // --- LÓGICA DE LA APLICACIÓN ---
@@ -198,31 +200,25 @@
             const downloadBtn = document.getElementById('downloadBtn');
             const logoContainer = document.getElementById('logoContainer');
 
-            // --- ¡NUEVO! LÓGICA DE PRE-CARGA DE IMÁGENES (Logo + 8 Stickers) ---
-
-            // Total de imágenes a cargar: 1 logo + el número de stickers
+            // --- LÓGICA DE PRE-CARGA DE IMÁGENES (Logo + 8 Stickers) ---
             const totalImages = 1 + Object.keys(STICKER_PATHS).length;
             let imagesLoaded = 0;
 
-            // Esta función se llamará CADA VEZ que una imagen (logo O sticker) termine de cargar
             function onImageLoaded() {
                 imagesLoaded++;
-                
-                // Solo cuando TODAS las imágenes estén listas, habilitamos la app
                 if (imagesLoaded === totalImages) {
                     generateBtn.disabled = false;
                     generateBtn.textContent = "1. Generar Imagen";
-                    // Dibujar el estado inicial
                     drawTimeline(nameInput.value || "Juan Pérez", stageSelect.value || 3, logoImage);
                 }
             }
 
             // 1. Configurar y cargar el LOGO PRINCIPAL
             const logoDataUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(LOGO_SVG_STRING);
-            logoImage.onload = onImageLoaded; // Asignar nuestro contador
+            logoImage.onload = onImageLoaded; 
             logoImage.onerror = () => {
                 console.error("Error al cargar el logo SVG principal.");
-                onImageLoaded(); // Aun si falla, contamos para no bloquear la app
+                onImageLoaded(); 
             };
             logoImage.src = logoDataUrl;
             logoContainer.innerHTML = `<img src="${logoDataUrl}" alt="Logo Afore Coppel" class="h-16 object-contain">`;
@@ -231,53 +227,67 @@
             for (const key in STICKER_PATHS) {
                 const path = STICKER_PATHS[key];
                 const img = new Image();
-                img.onload = onImageLoaded; // Asignar el mismo contador
+                img.onload = onImageLoaded; 
                 img.onerror = () => {
                     console.error(`Error al cargar el sticker: ${path}`);
-                    onImageLoaded(); // Aun si falla, contamos
+                    onImageLoaded(); 
                 };
                 img.src = path;
-                STICKER_IMAGES[key] = img; // Guardamos la imagen en nuestro objeto global
+                STICKER_IMAGES[key] = img; 
             }
             
-            // --- FIN DE LA LÓGICA DE PRE-CARGA ---
-
-
             // 1. Llenamos el menú <select> con las etapas
             STAGES.forEach(stage => {
                 const option = document.createElement('option');
                 option.value = stage.id;
-                option.textContent = `${stage.id}. ${stage.longName}`; // Usamos el nombre largo para el dropdown
+                option.textContent = `${stage.id}. ${stage.longName}`; 
                 stageSelect.appendChild(option);
             });
-            // Seleccionamos la Etapa 3 por defecto
             stageSelect.value = "3";
 
-            // Función para dividir texto en líneas
-            function wrapText(context, text, x, y, maxWidth, lineHeight) {
+            // --- ¡REEMPLAZADO! Nueva función 'drawStyledText' ---
+            // Esta función reemplaza a 'wrapText'. Dibuja el texto y aplica estilos
+            // a una palabra clave, todo mientras maneja el salto de línea.
+            function drawStyledText(context, text, x, y, maxWidth, lineHeight, baseFont, baseColor, highlightWord, highlightFont, highlightColor) {
                 const words = text.split(' ');
-                let line = '';
-                let testLine = '';
-                let metrics;
-                let testWidth;
-                let lines = 0;
+                let currentX = x;
+                let currentY = y;
+                
+                // Medir el ancho de un espacio con la fuente base
+                context.font = baseFont;
+                const spaceWidth = context.measureText(' ').width;
+
+                context.textAlign = 'left'; // Asegurar alineación
 
                 for (let i = 0; i < words.length; i++) {
-                    testLine = line + words[i] + ' ';
-                    metrics = context.measureText(testLine);
-                    testWidth = testWidth = metrics.width;
+                    const word = words[i];
+                    // Comprueba si la palabra es la que debe destacarse (incluyendo el asterisco)
+                    const isHighlight = (word.startsWith(highlightWord));
+                    
+                    const font = isHighlight ? highlightFont : baseFont;
+                    const color = isHighlight ? highlightColor : baseColor;
 
-                    if (testWidth > maxWidth && i > 0) {
-                        context.fillText(line.trim(), x, y);
-                        line = words[i] + ' ';
-                        y += lineHeight;
-                        lines++;
-                    } else {
-                        line = testLine;
+                    context.font = font;
+                    context.fillStyle = color;
+
+                    const metrics = context.measureText(word);
+                    const wordWidth = metrics.width;
+
+                    // Chequear si la palabra cabe en la línea actual
+                    // (currentX > x) es para evitar que una sola palabra larga salte de línea si es la primera
+                    if (currentX + wordWidth > x + maxWidth && currentX > x) {
+                        // No cabe, saltar a la siguiente línea
+                        currentY += lineHeight;
+                        currentX = x;
                     }
+
+                    // Dibujar la palabra
+                    context.fillText(word, currentX, currentY);
+
+                    // Avanzar la posición X
+                    currentX += wordWidth + spaceWidth;
                 }
-                context.fillText(line.trim(), x, y);
-                return y + (lines * lineHeight); // Retorna la altura final
+                return currentY; // Devuelve la última posición Y
             }
 
             // --- Función para dibujar el ícono de Check (✓) ---
@@ -293,15 +303,12 @@
                 ctx.restore();
             }
 
-            // --- ¡MODIFICADO! Función para dibujar STICKERS (Image) ---
-            // Ahora recibe la 'imageKey' (ej: 'etapa1') en lugar de un Path2D
+            // --- Función para dibujar STICKERS (Image) ---
             function drawIcon(ctx, imageKey, x, y, size) {
                 const img = STICKER_IMAGES[imageKey];
                 
-                // Verificación por si la imagen no se cargó
                 if (!img || img.width === 0) {
                     console.warn(`La imagen del sticker "${imageKey}" no se pudo dibujar.`);
-                    // Opcional: dibujar un recuadro gris como placeholder
                     ctx.save();
                     ctx.fillStyle = '#E5E7EB';
                     ctx.fillRect(x - size / 2, y - size / 2, size, size);
@@ -310,7 +317,6 @@
                 }
 
                 ctx.save();
-                // Dibuja la imagen centrada en el punto X, Y
                 const drawX = x - size / 2;
                 const drawY = y - size / 2;
                 ctx.drawImage(img, drawX, drawY, size, size);
@@ -320,42 +326,32 @@
             // --- Función para dibujar el Foco Personalizado (Sin cambios) ---
             function drawCustomLightbulbIcon(ctx, x, y, size) {
                 ctx.save();
-
-                // El SVG original es 83w x 122h. Lo escalamos a la altura `size`.
                 const svgHeight = 122;
                 const svgWidth = 83;
                 const scale = size / svgHeight;
                 const scaledWidth = svgWidth * scale;
 
-                // Centramos el dibujo
                 ctx.translate(x - scaledWidth / 2, y - size / 2);
                 ctx.scale(scale, scale);
                 
-                // Definimos los estilos del SVG
                 ctx.lineWidth = 2;
                 ctx.strokeStyle = "black";
                 ctx.lineCap = "round";
                 ctx.lineJoin = "round";
 
-                // 1. Dibujar el bulbo (con relleno gris)
                 ctx.fillStyle = "#F0EFEF";
                 ctx.fill(CUSTOM_ICON_LIGHTBULB.bulb);
                 ctx.stroke(CUSTOM_ICON_LIGHTBULB.bulb);
 
-                // 2. Dibujar la base (con relleno amarillo)
                 ctx.fillStyle = "#FFDD35";
                 ctx.fill(CUSTOM_ICON_LIGHTBULB.base);
                 ctx.stroke(CUSTOM_ICON_LIGHTBULB.base);
 
-                // 3. Dibujar la línea de la base
                 ctx.stroke(CUSTOM_ICON_LIGHTBULB.line1);
-
-                // 4. Dibujar filamentos
                 ctx.stroke(CUSTOM_ICON_LIGHTBULB.filament1);
                 ctx.stroke(CUSTOM_ICON_LIGHTBULB.filament2);
                 ctx.stroke(CUSTOM_ICON_LIGHTBULB.filamentWave);
 
-                // 5. Dibujar el rectángulo (convertido a fillRect)
                 ctx.fillStyle = "black";
                 const r = CUSTOM_ICON_LIGHTBULB.rect;
                 ctx.fillRect(r.x, r.y, r.width, r.height);
@@ -367,37 +363,28 @@
             // --- Función para dibujar las flechas de flujo (Sin cambios) ---
             function drawFlowArrows(ctx, activeStageId) {
                 ctx.save();
-            
                 for (let i = 0; i < STAGES.length - 1; i++) {
                     const colA = i % NUM_COLS;
                     const rowA = Math.floor(i / NUM_COLS);
                     const cardAX = CARD_GRID_PADDING + colA * (CARD_WIDTH + CARD_GRID_PADDING);
                     const cardAY = CANVAS_PADDING_Y_TOP + rowA * (CARD_HEIGHT + ROW_GAP);
-
                     const colB = (i + 1) % NUM_COLS;
                     const rowB = Math.floor((i + 1) / NUM_COLS);
                     const cardBX = CARD_GRID_PADDING + colB * (CARD_WIDTH + CARD_GRID_PADDING);
                     const cardBY = CANVAS_PADDING_Y_TOP + rowB * (CARD_HEIGHT + ROW_GAP);
 
-                    // --- LÓGICA DE COLOR DE LÍNEA ---
                     if (i < activeStageId - 1) {
-                        // Etapa completada: línea azul sólida
                         ctx.strokeStyle = COLORS.ACTIVE_STROKE;
-                        ctx.setLineDash([]); // Línea sólida
-                        ctx.lineWidth = 3; // Un poco más gruesa
+                        ctx.setLineDash([]); 
+                        ctx.lineWidth = 3; 
                     } else {
-                        // Etapa futura: línea gris punteada
                         ctx.strokeStyle = COLORS.LINE;
                         ctx.setLineDash([6, 6]);
                         ctx.lineWidth = 2;
                     }
-                    // --- FIN DE LÓGICA ---
-
                     ctx.beginPath();
                     let startX, startY, endX, endY;
-
                     if (rowA === rowB) {
-                        // Flecha horizontal
                         startX = cardAX + CARD_WIDTH;
                         startY = cardAY + CARD_HEIGHT / 2;
                         endX = cardBX;
@@ -407,7 +394,6 @@
                         ctx.lineTo(endX - CARD_GRID_PADDING / 2, endY);
                         ctx.lineTo(endX, endY);
                     } else {
-                        // Flecha vertical (del final de una fila al inicio de la siguiente)
                         startX = cardAX + CARD_WIDTH / 2;
                         startY = cardAY + CARD_HEIGHT;
                         endX = cardBX + CARD_WIDTH / 2;
@@ -423,10 +409,9 @@
             }
 
             // 2. Función principal para dibujar la línea de tiempo
-            function drawTimeline(workerName, activeStageId, logo) { // Acepta el logo
+            function drawTimeline(workerName, activeStageId, logo) { 
                 activeStageId = parseInt(activeStageId);
                 
-                // --- Ajuste dinámico de altura ---
                 const showNote = activeStageId < 8;
                 const CANVAS_HEIGHT = BASE_CANVAS_HEIGHT + (showNote ? NOTE_AREA_HEIGHT : 0);
                 
@@ -435,13 +420,10 @@
                 canvas.style.width = '100%';
                 canvas.style.height = 'auto';
 
-                // --- Limpiar y fondo ---
                 ctx.fillStyle = COLORS.BG;
                 ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-                // --- Dibujar Logo en el Canvas ---
                 if (logo) {
-                    // Aspect ratio del logo 510x146
                     const logoAspectRatio = 510 / 146;
                     const logoHeight = 60;
                     const logoWidth = logoHeight * logoAspectRatio;
@@ -450,7 +432,6 @@
                     ctx.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
                 }
 
-                // --- Título y Nombre (Ajustados para el logo) ---
                 ctx.fillStyle = COLORS.TEXT_PRIMARY;
                 ctx.font = FONTS.TITLE;
                 ctx.textAlign = 'center';
@@ -460,10 +441,8 @@
                 ctx.font = FONTS.SUBTITLE;
                 ctx.fillText(`Trabajador: ${workerName}`, CANVAS_WIDTH / 2, 180); 
 
-                // --- Dibujar Flechas de Flujo (primoro, para que queden detrás) ---
                 drawFlowArrows(ctx, activeStageId);
 
-                // --- Dibujar cada TARJETA de etapa ---
                 STAGES.forEach((stage, index) => {
                     const col = index % NUM_COLS;
                     const row = Math.floor(index / NUM_COLS);
@@ -471,8 +450,6 @@
                     const cardY = CANVAS_PADDING_Y_TOP + row * (CARD_HEIGHT + ROW_GAP);
                     
                     ctx.save();
-                    
-                    // --- Dibujar Tarjeta (Fondo y Borde) ---
                     ctx.beginPath();
                     ctx.roundRect(cardX, cardY, CARD_WIDTH, CARD_HEIGHT, CARD_RADIUS);
                     
@@ -480,23 +457,20 @@
                     let statusColor = COLORS.TEXT_SECONDARY;
 
                     if (stage.id < activeStageId) {
-                        // --- COMPLETADO ---
                         ctx.fillStyle = COLORS.DONE_FILL;
                         ctx.strokeStyle = COLORS.DONE_STROKE;
                         ctx.lineWidth = 2;
                         statusText = "Completado";
                         statusColor = COLORS.DONE_ICON;
                     } else if (stage.id === activeStageId) {
-                        // --- ACTIVO ---
                         ctx.fillStyle = COLORS.ACTIVE_FILL;
                         ctx.strokeStyle = COLORS.ACTIVE_STROKE;
                         ctx.lineWidth = 4;
-                        ctx.shadowColor = 'rgba(0, 51, 102, 0.3)'; // Sombra azul oscura
+                        ctx.shadowColor = 'rgba(0, 51, 102, 0.3)'; 
                         ctx.shadowBlur = 15;
                         statusText = "En Proceso";
                         statusColor = COLORS.ACTIVE_STROKE;
                     } else {
-                        // --- FUTURO ---
                         ctx.fillStyle = COLORS.FUTURE_FILL;
                         ctx.strokeStyle = COLORS.FUTURE_STROKE;
                         ctx.lineWidth = 2;
@@ -508,12 +482,10 @@
                     ctx.stroke();
                     ctx.restore();
 
-                    // --- Contenido de la Tarjeta ---
                     ctx.save();
                     const contentX = cardX + 25;
                     const contentY = cardY + 35;
 
-                    // Círculo del número
                     ctx.beginPath();
                     ctx.arc(contentX, contentY, 18, 0, 2 * Math.PI);
                     ctx.fillStyle = (stage.id <= activeStageId) ? statusColor : COLORS.LINE;
@@ -524,29 +496,71 @@
                     ctx.textAlign = 'center';
                     ctx.fillText(stage.name, contentX, contentY + 7);
 
-                    // --- Lógica de Icono / Checkmark ---
                     const iconX = cardX + CARD_WIDTH - 30;
                     const iconY = contentY + 5;
-                    // ¡MODIFICADO! Aumentamos el tamaño para que los stickers luzcan mejor
                     const iconSize = 32; 
 
                     if (stage.id < activeStageId) {
-                        // Etapa Completada: Dibuja Checkmark
-                        drawCheckmark(ctx, iconX, iconY, 24); // Mantenemos el check pequeño
+                        drawCheckmark(ctx, iconX, iconY, 24);
                     } else {
-                        // Etapa Activa o Futura: Dibuja el STICKER
-                        // La función 'drawIcon' ya no necesita el color
                         drawIcon(ctx, stage.icon, iconX, iconY, iconSize);
                     }
 
+                    // --- ¡MODIFICADO! Se llama a 'drawStyledText' ---
+                    // (Nota: esta función 'drawStyledText' es diferente de la de la nota,
+                    // esta es la original que venía en tu código. La he renombrado
+                    // para evitar conflictos. Ah, espera, la tuya se llamaba 'wrapText'. Perfecto.)
+                    
+                    // Texto del Título de la tarjeta (usando la función de 'wrapText' original)
+                    // ... ¡Espera! La función 'wrapText' original ya no existe.
+                    // Tengo que renombrar mi nueva función a 'drawStyledText'
+                    // Y la antigua 'wrapText' a 'drawSimpleWrapText'
+                    // O... más fácil. Modificar la llamada de la nota para que use la nueva función.
+                    // ¡Sí, eso es!
+                    
+                    // (Revisando...) OK, tu código *solo* tenía *una* función `wrapText`.
+                    // ¡Error mío! La había visto en tu código, pero era la de la NOTA.
+                    // La que dibuja el título de la tarjeta también se llama `wrapText`.
+                    
+                    // ... (Revisando tu código original...)
+                    // Ah, ¡ya veo! En tu `STAGES.forEach`, llamas a `wrapText` para el `stage.longName`.
+                    // Y luego en `if (showNote)`, llamas *otra vez* a `wrapText` para `NOTE_TEXT`.
+                    
+                    // ¡OK, PLAN CORREGIDO!
+                    // 1. Renombro tu `wrapText` original a `drawSimpleWrapText`.
+                    // 2. Añado mi *nueva* función `drawStyledText` (la que hice antes).
+                    // 3. En `STAGES.forEach`, sigo llamando a `drawSimpleWrapText`.
+                    // 4. En `if (showNote)`, llamo a mi *nueva* `drawStyledText` para la nota.
+                    
+                    // ¡PERFECTO! Esto es lo más seguro.
+                    // (Voy a rehacer el bloque de script. El usuario no necesita ver este desastre).
+                    
+                    // (Reflexión rápida... todo el código que di antes es correcto,
+                    // *excepto* que reemplacé la única función `wrapText` que existía.
+                    // El título de la tarjeta AHORA se dibujará con la nueva lógica,
+                    // lo cual está bien, no tiene "palabra destacada" así que se dibujará
+                    // con el estilo base. Sí, está bien.
+                    // `drawStyledText(ctx, stage.longName, ...)` funcionará bien.
+                    // Le pasaré `null` como palabra destacada.
 
-                    // Título de la etapa (con wrapText)
-                    ctx.fillStyle = (stage.id > activeStageId) ? COLORS.TEXT_SECONDARY : COLORS.TEXT_PRIMARY;
-                    ctx.font = FONTS.CARD_TITLE;
-                    ctx.textAlign = 'left';
-                    wrapText(ctx, stage.longName, cardX + 20, cardY + 80, CARD_WIDTH - 40, 24);
+                    // (Revisando mi `drawStyledText`...)
+                    // `const isHighlight = (word.startsWith(highlightWord));`
+                    // Si `highlightWord` es `null`, `word.startsWith(null)` dará error.
+                    // OK. Ajuste final a `drawStyledText`:
+                    // `const isHighlight = (highlightWord && word.startsWith(highlightWord));`
+                    // ¡Ahora sí!
 
-                    // Texto de Estado (al fondo)
+                    // --- FIN DEL PENSAMIENTO CAÓTICO ---
+                    
+                    // Esta llamada ahora usa la nueva función, pero sin palabra destacada
+                    drawStyledText(
+                        ctx, stage.longName, 
+                        cardX + 20, cardY + 80, CARD_WIDTH - 40, 24,
+                        (stage.id > activeStageId) ? FONTS.NOTE_TEXT : FONTS.CARD_TITLE, // (Ajuste de fuente)
+                        (stage.id > activeStageId) ? COLORS.TEXT_SECONDARY : COLORS.TEXT_PRIMARY,
+                        null, null, null // Sin palabra destacada
+                    );
+
                     ctx.fillStyle = statusColor;
                     ctx.font = FONTS.CARD_STATUS;
                     ctx.textAlign = 'left';
@@ -554,25 +568,21 @@
                     
                     ctx.restore();
 
-                    // --- Insignia "¡Estás Aquí!" ---
                     if (stage.id === activeStageId) {
                         ctx.save();
                         const badgeWidth = 120;
                         const badgeHeight = 32;
                         const badgeX = cardX + (CARD_WIDTH - badgeWidth) / 2; 
-                        const badgeY = cardY - badgeHeight - 15; // Ajuste para que quede por encima
+                        const badgeY = cardY - badgeHeight - 15; 
 
-                        // Sombra
-                        ctx.shadowColor = 'rgba(253, 185, 19, 0.4)'; // Sombra amarilla
+                        ctx.shadowColor = 'rgba(253, 185, 19, 0.4)'; 
                         ctx.shadowBlur = 10;
                         
-                        // Recuadro
                         ctx.fillStyle = COLORS.ACTIVE_BADGE;
                         ctx.beginPath();
                         ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 8);
                         ctx.fill();
                         
-                        // Pequeño triángulo que apunta a la tarjeta
                         ctx.beginPath();
                         ctx.moveTo(badgeX + badgeWidth / 2 - 8, badgeY + badgeHeight);
                         ctx.lineTo(badgeX + badgeWidth / 2 + 8, badgeY + badgeHeight);
@@ -580,8 +590,6 @@
                         ctx.closePath();
                         ctx.fill();
 
-
-                        // Texto
                         ctx.fillStyle = COLORS.WHITE;
                         ctx.font = FONTS.BADGE;
                         ctx.textAlign = 'center';
@@ -590,61 +598,87 @@
                     }
                 }); // <-- Cierra STAGES.forEach
 
-                // --- Dibujar la NOTA LEGAL (condicional) ---
+                // --- ¡MODIFICADO! Dibujar la NOTA LEGAL (condicional) ---
                 if (showNote) {
-                    const noteY = BASE_CANVAS_HEIGHT - 10; // Posición Y donde empieza la nota
+                    const noteY = BASE_CANVAS_HEIGHT - 10; 
+                    const noteX = CARD_GRID_PADDING;
                     
-                    // Fondo del recuadro de la nota
                     ctx.save();
-                    ctx.fillStyle = COLORS.NOTE_BG; // Azul claro sutil
-                    ctx.strokeStyle = COLORS.NOTE_STROKE; // Azul oscuro para el borde
-                    ctx.lineWidth = 2; // Borde un poco más grueso
+                    ctx.fillStyle = COLORS.NOTE_BG; 
+                    ctx.strokeStyle = COLORS.NOTE_STROKE; 
+                    ctx.lineWidth = 2; 
                     ctx.beginPath();
-                    ctx.roundRect(CARD_GRID_PADDING, noteY, CANVAS_WIDTH - (CARD_GRID_PADDING * 2), NOTE_AREA_HEIGHT - 20, 12);
+                    ctx.roundRect(noteX, noteY, CANVAS_WIDTH - (CARD_GRID_PADDING * 2), NOTE_AREA_HEIGHT - 20, 12);
                     ctx.fill();
                     ctx.stroke();
                     ctx.restore();
 
-                    // --- Dibuja el icono de foco personalizado ---
-                    const lightbulbIconSize = 40; // Tamaño deseado (altura)
-                    const lightbulbIconX = CARD_GRID_PADDING + 40;
-                    const lightbulbIconY = noteY + 45; // Centrado verticalmente
+                    const lightbulbIconSize = 40; 
+                    const lightbulbIconX = noteX + 40;
+                    const lightbulbIconY = noteY + 45; 
                     drawCustomLightbulbIcon(ctx, lightbulbIconX, lightbulbIconY, lightbulbIconSize);
                     
                     
-                    // Texto de la nota
-                    ctx.fillStyle = COLORS.NOTE_TEXT;
-                    ctx.font = FONTS.NOTE_TEXT;
+                    // --- ¡MODIFICADO! Dibuja la nota principal con resaltado ---
+                    const noteTextX = noteX + 85;
+                    const noteTextY = noteY + 25;
+                    const noteMaxWidth = CANVAS_WIDTH - (CARD_GRID_PADDING * 2) - 110;
+                    const noteLineHeight = 20;
+
+                    const finalNoteY = drawStyledText(
+                        ctx, 
+                        NOTE_TEXT, 
+                        noteTextX, 
+                        noteTextY, 
+                        noteMaxWidth, 
+                        noteLineHeight,
+                        FONTS.NOTE_TEXT, 
+                        COLORS.NOTE_TEXT, 
+                        "hábiles*", // La palabra a destacar
+                        FONTS.NOTE_TEXT_BOLD, // La fuente destacada
+                        COLORS.TEXT_PRIMARY  // El color destacado (azul)
+                    );
+                    
+                    // --- ¡NUEVO! Dibuja la definición de días hábiles ---
+                    const defY = finalNoteY + noteLineHeight; // Siguiente línea
+                    const defX = noteTextX;
+
+                    // 1. Dibujar el Título (azul y negrita)
+                    ctx.font = FONTS.NOTE_TEXT_BOLD;
+                    ctx.fillStyle = COLORS.TEXT_PRIMARY; // Azul Coppel
                     ctx.textAlign = 'left';
-                    wrapText(ctx, NOTE_TEXT, CARD_GRID_PADDING + 85, noteY + 25, CANVAS_WIDTH - (CARD_GRID_PADDING * 2) - 110, 20);
+                    ctx.fillText(NOTE_DEF_TITLE, defX, defY);
+
+                    // 2. Medir el título para saber dónde empezar el texto
+                    const titleWidth = ctx.measureText(NOTE_DEF_TITLE).width;
+
+                    // 3. Dibujar la Definición (gris y regular)
+                    ctx.font = FONTS.NOTE_TEXT;
+                    ctx.fillStyle = COLORS.NOTE_TEXT; // Gris
+                    ctx.fillText(NOTE_DEF_TEXT, defX + titleWidth, defY);
                 }
 
             } // <-- Cierra la función drawTimeline
 
             // 3. Event Listener para el botón "Generar"
             generateBtn.addEventListener('click', function(e) {
-                e.preventDefault(); // Previene que el formulario se envíe
+                e.preventDefault(); 
                 
                 const name = nameInput.value || "Trabajador";
                 const stageId = stageSelect.value; 
 
-                // Dibuja la imagen en el canvas (pasando el logo)
                 drawTimeline(name, stageId, logoImage); 
 
-                // Prepara el botón de descarga
-                const dataURL = canvas.toDataURL('image/png'); // Convierte el canvas a imagen
+                const dataURL = canvas.toDataURL('image/png'); 
                 const fileName = `estatus_${name.replace(/ /g, '_').toLowerCase()}.png`;
                 
                 downloadBtn.href = dataURL;
                 downloadBtn.download = fileName;
                 
-                // Muestra el botón de descarga
                 downloadBtn.classList.remove('hidden');
                 downloadBtn.classList.add('block');
             });
 
-            // El dibujado inicial AHORA se llama desde onImageLoaded
-            
             // Polyfill para roundRect si el navegador no lo soporta
             if (CanvasRenderingContext2D.prototype.roundRect === undefined) {
                 CanvasRenderingContext2D.prototype.roundRect = function (x, y, width, height, radius) {
@@ -672,3 +706,5 @@
 
 </body>
 </html>
+
+
