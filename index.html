@@ -6,9 +6,9 @@
     <title>Generador de Estatus de Separación V2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Montserrat', sans-serif;
         }
         /* Colores personalizados basados en el logo */
         .bg-afore-blue { background-color: #003366; } /* Azul oscuro del logo */
@@ -32,7 +32,7 @@
 
         
 
-<form id="generatorForm" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 items-end">
+<form id="generatorForm" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10 items-end">
             <div class="md:col-span-1">
                 <label for="nameInput" class="block text-sm font-semibold text-gray-800 mb-1">
                     Nombre del Trabajador
@@ -47,6 +47,13 @@
                 <select id="stageSelect" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-white focus:ring-blue-500 focus:border-blue-500 transition-all">
                     
 </select>
+            </div>
+            
+            <div class="md:col-span-1">
+                <label for="startDateInput" class="block text-sm font-semibold text-gray-800 mb-1">
+                    Fecha de Inicio del Trámite
+                </label>
+                <input type="date" id="startDateInput" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-all">
             </div>
 
             <button type="button" id="generateBtn" class="w-full md:col-span-1 bg-afore-blue text-white p-3 rounded-lg font-bold text-lg hover:bg-afore-blue-darker transition-all shadow-lg transform hover:scale-105 h-[46px]" disabled>
@@ -106,18 +113,7 @@
 <path d="M0 0 C0 1.98 0 3.96 0 6 C-1.32 6.33 -2.64 6.66 -4 7 C-4.33 8.65 -4.66 10.3 -5 12 C-3.35 12 -1.7 12 0 12 C0 13.98 0 15.96 0 18 C-1.65 18 -3.3 18 -5 18 C-5 24.6 -5 31.2 -5 38 C-7.31 38 -9.62 38 -12 38 C-12 31.4 -12 24.8 -12 18 C-13.65 18 -15.3 18 -17 18 C-17 16.02 -17 14.04 -17 12 C-15.35 12 -13.7 12 -12 12 C-11.96261719 11.38511719 -11.92523438 10.77023438 -11.88671875 10.13671875 C-11.82097656 9.32847656 -11.75523437 8.52023438 -11.6875 7.6875 C-11.62949219 6.88699219 -11.57148438 6.08648437 -11.51171875 5.26171875 C-10.05791642 -1.1638656 -5.47657526 -0.26933977 0 0 Z " fill="#2E3D73" transform="translate(186,44)"/>
 <path d="M0 0 C2.64 0 5.28 0 8 0 C8 12.87 8 25.74 8 39 C5.36 39 2.72 39 0 39 C0 26.13 0 13.26 0 0 Z " fill="#425081" transform="translate(439,43)"/>
 <path d="M0 0 C2.31 0 4.62 0 7 0 C7.33 0.66 7.66 1.32 8 2 C8.66 1.34 9.32 0.68 10 0 C13.625 -0.125 13.625 -0.125 17 0 C17 1.98 17 3.96 17 6 C15.88625 6.12375 14.7725 6.2475 13.625 6.375 C9.96896323 6.6465813 9.96896323 6.6465813 8 9 C7.69324768 11.89967757 7.48826629 14.71783178 7.375 17.625 C7.33632812 18.42679688 7.29765625 19.22859375 7.2578125 20.0546875 C7.16346069 22.03607556 7.08063785 24.01800645 7 26 C4.69 26 2.38 26 0 26 C0 17.42 0 8.84 0 0 Z " fill="#2D3D73" transform="translate(217,56)"/>
-<path d="M0 0 C2.50041894 0.08168338 3.83455801 0.19140582 6.0625 1.375 C7.65154125 4.45376742 7.42023097 6.91405579 7.0625 10.3125 C6 12.75 6 12.75 4.0625 14.3125 C0.625 14.875 0.625 14.875 -2.9375 14.3125 C-5.4375 12.25 -5.4375 12.25 -6.9375 9.3125 C-6.73458297 3.3264476 -6.40780043 0.50855559 0 0 Z " fill="#F3F4F7" transform="translate(361.9375,61.6875)"/>
-<path d="M0 0 C2 1.0625 2 1.0625 3 3 C3.5 6.4375 3.5 6.4375 3 10 C0.9375 12.5 0.9375 12.5 -2 14 C-5.6875 13.9375 -5.6875 13.9375 -9 13 C-11.46324069 9.30513897 -11.38991688 7.36706908 -11 3 C-8.82986072 -1.20464485 -4.15736573 -0.61494368 0 0 Z " fill="#F4F5F7" transform="translate(397,62)"/>
-<path d="M0 0 C1.9375 1.0625 1.9375 1.0625 3 3 C3.50030235 6.93094707 3.5996142 9.1005787 1.375 12.4375 C-1.71685231 14.47161336 -3.36367425 14.60605429 -7 14 C-9.375 12.375 -9.375 12.375 -11 10 C-11.60605429 6.36367425 -11.47161336 4.71685231 -9.4375 1.625 C-6.1005787 -0.5996142 -3.93094707 -0.50030235 0 0 Z " fill="#F6D117" transform="translate(116,62)"/>
-<path d="M0 0 C2.375 1.0625 2.375 1.0625 4 3 C4.57491549 6.95254396 4.61372366 9.07941451 2.375 12.4375 C-0.66541695 14.43777431 -2.4227467 14.45667063 -6 14 C-9 12 -9 12 -9.9375 8.125 C-10.20860552 5.01858256 -10.15042031 4.2406725 -8.4375 1.5 C-5.32176494 -0.41737542 -3.60361708 -0.52552749 0 0 Z " fill="#F6D21B" transform="translate(98,62)"/>
-<path d="M0 0 C3.625 0.375 3.625 0.375 6.125 1.9375 C7.625 4.375 7.625 4.375 7.625 7.9375 C6.625 11.375 6.625 11.375 4.875 13.3125 C2.10208502 14.62193207 0.64980283 14.97996057 -2.375 14.375 C-4.75 12.3125 -4.75 12.3125 -6.375 9.375 C-6.18819799 3.86434072 -5.98170158 0.66463351 0 0 Z " fill="#F1F2F5" transform="translate(331.375,61.625)"/>
-<path d="M0 0 C2.375 1.625 2.375 1.625 4 4 C4.44912849 7.14389944 4.504106 9.05480125 3 11.875 C-0.37806895 13.77516379 -3.16618269 13.36512546 -7 13 C-9.46324069 9.30513897 -9.38991688 7.36706908 -9 3 C-6.84532543 -0.71082843 -4.00794956 -0.57256422 0 0 Z " fill="#F7F8FA" transform="translate(203,62)"/>
-<path d="M0 0 C2 1 2 1 2.8515625 2.9609375 C3.10679687 3.75757813 3.36203125 4.55421875 3.625 5.375 C3.88539063 6.16648437 4.14578125 6.95796875 4.4140625 7.7734375 C5 10 5 10 5 13 C2.03 13 -0.94 13 -4 13 C-3.50269348 8.02693484 -2.44697666 4.36200187 0 0 Z " fill="#EDEFF3" transform="translate(153,55)"/>
-<path d="M0 0 C6.6 0 13.2 0 20 0 C19.67 1.32 19.34 2.64 19 4 C19 3.34 19 2.68 19 2 C16.69 2 14.38 2 12 2 C12 2.66 12 3.32 12 4 C8.95016004 5.52491998 6.3576631 5.23562548 3 5 C1.0625 3.625 1.0625 3.625 0 2 C0 1.34 0 0.68 0 0 Z " fill="#EDEEF3" transform="translate(242,71)"/>
-<path d="M0 0 C6.6 0 13.2 0 20 0 C19.67 0.66 19.34 1.32 19 2 C16.69 2 14.38 2 12 2 C12 2.66 12 3.32 12 4 C8.95016004 5.52491998 6.3576631 5.23562548 3 5 C1.0625 3.625 1.0625 3.625 0 2 C0 1.34 0 0.68 0 0 Z " fill="#EDEEF3" transform="translate(416,71)"/>
-<path d="M0 0 C3.47214266 0.27232491 4.7550428 0.8175428 7.1875 3.25 C7.1875 3.91 7.1875 4.57 7.1875 5.25 C2.8975 5.25 -1.3925 5.25 -5.8125 5.25 C-3.33575581 0.29651163 -3.33575581 0.29651163 0 0 Z " fill="#CDD1DE" transform="translate(421.8125,60.75)"/>
-<path d="M0 0 C1.134375 0.28875 2.26875 0.5775 3.4375 0.875 C4.0975 2.195 4.7575 3.515 5.4375 4.875 C1.4775 4.875 -2.4825 4.875 -6.5625 4.875 C-6.5625 3.885 -6.5625 2.895 -6.5625 1.875 C-3.5625 -0.125 -3.5625 -0.125 0 0 Z " fill="#D5D8E3" transform="translate(249.5625,61.125)"/>
-<path d="M0 0 C0.66 0.33 1.32 0.66 2 1 C1.360625 1.556875 0.72125 2.11375 0.0625 2.6875 C-2.19680987 5.22066561 -2.63149047 6.68341424 -3 10 C-3.33 10 -3.66 10 -4 10 C-4.25 7.25 -4.25 7.25 -4 4 C-2 1.625 -2 1.625 0 0 Z " fill="#F7DA45" transform="translate(109,62)"/>
+<g><path d="M0 0 C2.50041894 0.08168338 3.83455801 0.19140582 6.0625 1.375 C7.65154125 4.45376742 7.42023097 6.91405579 7.0625 10.3125 C6 12.75 6 12.75 4.0625 14.3125 C0.625 14.875 0.625 14.875 -2.9375 14.3125 C-5.4375 12.25 -5.4375 12.25 -6.9375 9.3125 C-6.73458297 3.3264476 -6.40780043 0.50855559 0 0 Z " fill="#F3F4F7" transform="translate(361.9375,61.6875)"/><path d="M0 0 C2 1.0625 2 1.0625 3 3 C3.5 6.4375 3.5 6.4375 3 10 C0.9375 12.5 0.9375 12.5 -2 14 C-5.6875 13.9375 -5.6875 13.9375 -9 13 C-11.46324069 9.30513897 -11.38991688 7.36706908 -11 3 C-8.82986072 -1.20464485 -4.15736573 -0.61494368 0 0 Z " fill="#F4F5F7" transform="translate(397,62)"/><path d="M0 0 C1.9375 1.0625 1.9375 1.0625 3 3 C3.50030235 6.93094707 3.5996142 9.1005787 1.375 12.4375 C-1.71685231 14.47161336 -3.36367425 14.60605429 -7 14 C-9.375 12.375 -9.375 12.375 -11 10 C-11.60605429 6.36367425 -11.47161336 4.71685231 -9.4375 1.625 C-6.1005787 -0.5996142 -3.93094707 -0.50030235 0 0 Z " fill="#F6D117" transform="translate(116,62)"/><path d="M0 0 C2.375 1.0625 2.375 1.0625 4 3 C4.57491549 6.95254396 4.61372366 9.07941451 2.375 12.4375 C-0.66541695 14.43777431 -2.4227467 14.45667063 -6 14 C-9 12 -9 12 -9.9375 8.125 C-10.20860552 5.01858256 -10.15042031 4.2406725 -8.4375 1.5 C-5.32176494 -0.41737542 -3.60361708 -0.52552749 0 0 Z " fill="#F6D21B" transform="translate(98,62)"/><path d="M0 0 C3.625 0.375 3.625 0.375 6.125 1.9375 C7.625 4.375 7.625 4.375 7.625 7.9375 C6.625 11.375 6.625 11.375 4.875 13.3125 C2.10208502 14.62193207 0.64980283 14.97996057 -2.375 14.375 C-4.75 12.3125 -4.75 12.3125 -6.375 9.375 C-6.18819799 3.86434072 -5.98170158 0.66463351 0 0 Z " fill="#F1F2F5" transform="translate(331.375,61.625)"/><path d="M0 0 C2.375 1.625 2.375 1.625 4 4 C4.44912849 7.14389944 4.504106 9.05480125 3 11.875 C-0.37806895 13.77516379 -3.16618269 13.36512546 -7 13 C-9.46324069 9.30513897 -9.38991688 7.36706908 -9 3 C-6.84532543 -0.71082843 -4.00794956 -0.57256422 0 0 Z " fill="#F7F8FA" transform="translate(203,62)"/><path d="M0 0 C2 1 2 1 2.8515625 2.9609375 C3.10679687 3.75757813 3.36203125 4.55421875 3.625 5.375 C3.88539063 6.16648437 4.14578125 6.95796875 4.4140625 7.7734375 C5 10 5 10 5 13 C2.03 13 -0.94 13 -4 13 C-3.50269348 8.02693484 -2.44697666 4.36200187 0 0 Z " fill="#EDEFF3" transform="translate(153,55)"/><path d="M0 0 C6.6 0 13.2 0 20 0 C19.67 1.32 19.34 2.64 19 4 C19 3.34 19 2.68 19 2 C16.69 2 14.38 2 12 2 C12 2.66 12 3.32 12 4 C8.95016004 5.52491998 6.3576631 5.23562548 3 5 C1.0625 3.625 1.0625 3.625 0 2 C0 1.34 0 0.68 0 0 Z " fill="#EDEEF3" transform="translate(242,71)"/><path d="M0 0 C6.6 0 13.2 0 20 0 C19.67 0.66 19.34 1.32 19 2 C16.69 2 14.38 2 12 2 C12 2.66 12 3.32 12 4 C8.95016004 5.52491998 6.3576631 5.23562548 3 5 C1.0625 3.625 1.0625 3.625 0 2 C0 1.34 0 0.68 0 0 Z " fill="#EDEEF3" transform="translate(416,71)"/><path d="M0 0 C3.47214266 0.27232491 4.7550428 0.8175428 7.1875 3.25 C7.1875 3.91 7.1875 4.57 7.1875 5.25 C2.8975 5.25 -1.3925 5.25 -5.8125 5.25 C-3.33575581 0.29651163 -3.33575581 0.29651163 0 0 Z " fill="#CDD1DE" transform="translate(421.8125,60.75)"/><path d="M0 0 C1.134375 0.28875 2.26875 0.5775 3.4375 0.875 C4.0975 2.195 4.7575 3.515 5.4375 4.875 C1.4775 4.875 -2.4825 4.875 -6.5625 4.875 C-6.5625 3.885 -6.5625 2.895 -6.5625 1.875 C-3.5625 -0.125 -3.5625 -0.125 0 0 Z " fill="#D5D8E3" transform="translate(249.5625,61.125)"/><path d="M0 0 C0.66 0.33 1.32 0.66 2 1 C1.360625 1.556875 0.72125 2.11375 0.0625 2.6875 C-2.19680987 5.22066561 -2.63149047 6.68341424 -3 10 C-3.33 10 -3.66 10 -4 10 C-4.25 7.25 -4.25 7.25 -4 4 C-2 1.625 -2 1.625 0 0 Z " fill="#F7DA45" transform="translate(109,62)"/></g>
 </svg>`;
         
         const logoImage = new Image();
@@ -144,10 +140,21 @@
         const ROW_GAP = 50;
         const BASE_CANVAS_HEIGHT = CANVAS_PADDING_Y_TOP + (NUM_ROWS * CARD_HEIGHT) + ((NUM_ROWS - 1) * ROW_GAP) + CARD_GRID_PADDING; 
         
+        const DATE_AREA_HEIGHT = 60; 
+        const HOLIDAYS = [
+            '2025-01-01', // Año Nuevo
+            '2025-02-03', // Día de la Constitución (Primer Lunes de Feb)
+            '2025-03-17', // Natalicio de Benito Juárez (Tercer Lunes de Mar)
+            '2025-05-01', // Día del Trabajo
+            '2025-09-16', // Día de la Independencia
+            '2025-11-17', // Revolución Mexicana (Tercer Lunes de Nov)
+            '2025-12-25', // Navidad
+        ];
+
         const NOTE_AREA_HEIGHT = 130; 
         const NOTE_TEXT = "Es importante tener en cuenta que el tiempo estimado para el proceso de Separación de Cuentas es de aproximadamente 30 días hábiles*. Sin embargo, te informamos que este periodo podría extenderse en caso de que los institutos involucrados requieran un tiempo adicional para completar las validaciones necesarias.";
         const NOTE_DEF_TITLE = "*Hábiles: ";
-        const NOTE_DEF_TEXT = "Días de Lunes a Viernes, excluyendo Sábados, Domingos y días festivos.";
+        const NOTE_DEF_TEXT = "Días de Lunes a Viernes, sin considerar Sábados, Domingos y días festivos.";
 
 
         const COLORS = {
@@ -170,25 +177,51 @@
             NOTE_TEXT: '#4B5563', 
         };
         const FONTS = {
-            TITLE: 'bold 32px Inter', 
-            SUBTITLE: '22px Inter',
-            CARD_NUMBER: 'bold 20px Inter',
-            CARD_TITLE: 'bold 18px Inter',
-            CARD_STATUS: 'bold 14px Inter',
-            BADGE: 'bold 16px Inter',
-            NOTE_ICON: 'bold 30px Inter',
-            NOTE_TEXT: '14px Inter',
-            NOTE_TEXT_BOLD: 'bold 14px Inter'
+            TITLE: 'bold 32px Montserrat', 
+            SUBTITLE: '22px Montserrat',
+            CARD_NUMBER: 'bold 20px Montserrat',
+            CARD_TITLE: 'bold 18px Montserrat',
+            CARD_STATUS: 'bold 14px Montserrat',
+            BADGE: 'bold 16px Montserrat',
+            NOTE_ICON: 'bold 30px Montserrat',
+            NOTE_TEXT: '14px Montserrat',
+            NOTE_TEXT_BOLD: 'bold 14px Montserrat',
+            DATE_TEXT: 'bold 18px Montserrat'
         };
+
+        function formatDate(date) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('es-ES', options);
+        }
+
+        function addBusinessDays(startDate, days) {
+            let currentDate = new Date(startDate.getTime());
+            let daysAdded = 0;
+
+            while (daysAdded < days) {
+                currentDate.setDate(currentDate.getDate() + 1);
+                const dayOfWeek = currentDate.getDay();
+                
+                const dateString = currentDate.toISOString().split('T')[0];
+
+                if (dayOfWeek !== 0 && dayOfWeek !== 6 && !HOLIDAYS.includes(dateString)) {
+                    daysAdded++;
+                }
+            }
+            return currentDate;
+        }
 
         window.onload = function() {
             const canvas = document.getElementById('timelineCanvas');
             const ctx = canvas.getContext('2d');
             const nameInput = document.getElementById('nameInput');
             const stageSelect = document.getElementById('stageSelect');
+            const startDateInput = document.getElementById('startDateInput');
             const generateBtn = document.getElementById('generateBtn');
             const downloadBtn = document.getElementById('downloadBtn');
             const logoContainer = document.getElementById('logoContainer');
+
+            startDateInput.valueAsDate = new Date();
 
             const totalImages = 1 + Object.keys(STICKER_PATHS).length;
             let imagesLoaded = 0;
@@ -198,7 +231,7 @@
                 if (imagesLoaded === totalImages) {
                     generateBtn.disabled = false;
                     generateBtn.textContent = "1. Generar Imagen";
-                    drawTimeline(nameInput.value || "Juan Pérez", stageSelect.value || 3, logoImage);
+                    generateImage();
                 }
             }
 
@@ -247,7 +280,7 @@
 
                 for (let i = 0; i < words.length; i++) {
                     const word = words[i];
-                    const isHighlight = (word.startsWith(highlightWord));
+                    const isHighlight = (highlightWord && word.startsWith(highlightWord));
                     
                     const font = isHighlight ? highlightFont : baseFont;
                     const color = isHighlight ? highlightColor : baseColor;
@@ -260,7 +293,6 @@
 
                     
                     if (currentX + wordWidth > x + maxWidth && currentX > x) {
-                        // No cabe, saltar a la siguiente línea
                         currentY += lineHeight;
                         currentX = x;
                     }
@@ -393,11 +425,11 @@
             }
 
     
-            function drawTimeline(workerName, activeStageId, logo) { 
+            function drawTimeline(workerName, activeStageId, logo, startDateStr, endDateStr) { 
                 activeStageId = parseInt(activeStageId);
                 
                 const showNote = activeStageId < 8;
-                const CANVAS_HEIGHT = BASE_CANVAS_HEIGHT + (showNote ? NOTE_AREA_HEIGHT : 0);
+                const CANVAS_HEIGHT = BASE_CANVAS_HEIGHT + DATE_AREA_HEIGHT + (showNote ? NOTE_AREA_HEIGHT : 0);
                 
                 canvas.width = CANVAS_WIDTH;
                 canvas.height = CANVAS_HEIGHT;
@@ -536,9 +568,29 @@
                     }
                 }); 
 
+                const dateY = BASE_CANVAS_HEIGHT + 20;
+                ctx.font = FONTS.DATE_TEXT;
+                ctx.textAlign = 'left'; 
+
+                const labelInicio = "Fecha de Inicio: ";
+                const labelInicioWidth = ctx.measureText(labelInicio).width;
+                const valueInicioWidth = ctx.measureText(startDateStr).width;
+                const totalWidthInicio = labelInicioWidth + valueInicioWidth;
+                const startX_Inicio = (CANVAS_WIDTH / 2) - totalWidthInicio - 50; 
+
+                ctx.fillStyle = COLORS.TEXT_SECONDARY;
+                ctx.fillText(labelInicio, startX_Inicio, dateY);
+                ctx.fillStyle = COLORS.TEXT_PRIMARY;
+                ctx.fillText(startDateStr, startX_Inicio + labelInicioWidth, dateY);
+
+                const startX_Fin = (CANVAS_WIDTH / 2) + 50; 
+                ctx.fillStyle = COLORS.TEXT_SECONDARY;
+                ctx.fillText("Fecha Fin Tentativa: ", startX_Fin, dateY);
+                ctx.fillStyle = COLORS.TEXT_PRIMARY;
+                ctx.fillText(endDateStr, startX_Fin + ctx.measureText("Fecha Fin Tentativa: ").width, dateY);
             
                 if (showNote) {
-                    const noteY = BASE_CANVAS_HEIGHT - 10; 
+                    const noteY = BASE_CANVAS_HEIGHT + DATE_AREA_HEIGHT - 10; 
                     const noteX = CARD_GRID_PADDING;
                     
                     ctx.save();
@@ -556,8 +608,6 @@
                     const lightbulbIconY = noteY + 45; 
                     drawCustomLightbulbIcon(ctx, lightbulbIconX, lightbulbIconY, lightbulbIconSize);
                     
-                    
-                
                     const noteTextX = noteX + 85;
                     const noteTextY = noteY + 25;
                     const noteMaxWidth = CANVAS_WIDTH - (CARD_GRID_PADDING * 2) - 110;
@@ -598,24 +648,39 @@
 
             } 
 
-           
-            generateBtn.addEventListener('click', function(e) {
-                e.preventDefault(); 
-                
+            function generateImage() {
                 const name = nameInput.value || "Trabajador";
-                const stageId = stageSelect.value; 
+                const stageId = stageSelect.value;
+                const startDateValue = startDateInput.value;
 
-                drawTimeline(name, stageId, logoImage); 
+                if (!startDateValue) {
+                    console.error("Por favor, selecciona una fecha de inicio.");
+                    return; 
+                }
 
-                const dataURL = canvas.toDataURL('image/png'); 
-                const fileName = `estatus_${name.replace(/ /g, '_').toLowerCase()}.png`;
+                const startDate = new Date(startDateValue + 'T00:00:00');
                 
-                downloadBtn.href = dataURL;
-                downloadBtn.download = fileName;
-                
-                downloadBtn.classList.remove('hidden');
-                downloadBtn.classList.add('block');
-            });
+                const tentativeEndDate = addBusinessDays(startDate, 30);
+                const formattedStartDate = formatDate(startDate);
+                const formattedEndDate = formatDate(tentativeEndDate);
+
+                drawTimeline(name, stageId, logoImage, formattedStartDate, formattedEndDate); 
+
+                try {
+                    const dataURL = canvas.toDataURL('image/png'); 
+                    const fileName = `estatus_${name.replace(/ /g, '_').toLowerCase()}.png`;
+                    
+                    downloadBtn.href = dataURL;
+                    downloadBtn.download = fileName;
+                    
+                    downloadBtn.classList.remove('hidden');
+                    downloadBtn.classList.add('block');
+                } catch (err) {
+                    console.error("Error al exportar el canvas:", err);
+                }
+            }
+           
+            generateBtn.addEventListener('click', generateImage);
 
            
             if (CanvasRenderingContext2D.prototype.roundRect === undefined) {
@@ -644,7 +709,3 @@
 
 </body>
 </html>
-
-
-
-
