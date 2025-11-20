@@ -70,6 +70,20 @@
     </div> 
 
 <script type="module">
+        // --- CONFIGURACIÓN DE RUTAS DE IMÁGENES (RESTAURADO) ---
+        const STICKER_PATHS = {
+            etapa1: 'Lineadeltiemposeparacion/etapa-1.svg', // 1. Revisión
+            etapa2: 'Lineadeltiemposeparacion/etapa-2.svg', // 2. Análisis
+            etapa3: 'Lineadeltiemposeparacion/etapa-3.svg', // 3. Recopilación
+            etapa4: 'Lineadeltiemposeparacion/etapa-4.svg', // 4. Concluido
+            etapa5: 'Lineadeltiemposeparacion/etapa-5.svg', // 5. Actualización Info
+            etapa6: 'Lineadeltiemposeparacion/etapa-6.svg', // 6. Actualización Saldos
+            etapa7: 'Lineadeltiemposeparacion/etapa-7.svg', // 7. Etapa Final
+            etapa8: 'Lineadeltiemposeparacion/etapa-8.svg'  // 8. Notificación
+        };
+        
+        const STICKER_IMAGES = {};
+
         // --- Datos y Constantes ---
         const CUSTOM_ICON_LIGHTBULB = {
             bulb: new Path2D("M81.5259 39.8469C81.5259 18.1831 63.1531 0.665953 40.6228 1.00484C19.2804 1.32523 1.72496 17.9551 1.02248 38.5345C0.722336 47.3084 3.44282 55.4539 8.25157 62.0837C14.4653 70.6482 17.6392 80.9194 17.6392 91.3693V91.7821H64.8901V91.3693C64.8901 80.9625 67.9874 70.6913 74.2011 62.1823C78.8118 55.8668 81.5259 48.1649 81.5259 39.8469Z"),
@@ -124,8 +138,8 @@
         const CARD_GRID_PADDING = 40;
         const CARD_WIDTH = (CANVAS_WIDTH - CARD_GRID_PADDING * 5) / 4; 
         
-        // CAMBIO: Subí ligeramente a 270px para dar ese "espacio de un enter" extra
-        const CARD_HEIGHT = 270; 
+        // CAMBIO: Altura ajustada a 255 para un equilibrio óptimo
+        const CARD_HEIGHT = 255; 
         
         const CARD_RADIUS = 16;
         const NUM_COLS = 4;
@@ -144,8 +158,8 @@
             '2025-12-25', // Navidad
         ];
 
-        // CAMBIO: Aumenté la altura a 125px para crear el margen inferior simétrico
-        const NOTE_AREA_HEIGHT = 125; 
+        // CAMBIO: Altura ajustada a 130 para simetría con 25px de padding superior e inferior
+        const NOTE_AREA_HEIGHT = 130; 
         const NOTE_TEXT = "Es importante tener en cuenta que el tiempo estimado es de 30 días hábiles*, sin embargo, la Separación de Cuentas es un proceso de alta complejidad que requiere validaciones exhaustivas. Por ello, este periodo podría extenderse si los institutos involucrados requieren tiempo adicional para garantizar la seguridad de tu patrimonio.";
         const NOTE_DEF_TITLE = "*Hábiles: ";
         const NOTE_DEF_TEXT = "Días de Lunes a Viernes, sin considerar Sábados, Domingos y días festivos.";
@@ -217,21 +231,42 @@
 
             startDateInput.valueAsDate = new Date();
 
-            function enableButton() {
-                generateBtn.disabled = false;
-                generateBtn.textContent = "1. Generar Imagen";
-                generateImage();
+            // Restored image loading logic for stickers
+            let imagesLoaded = 0;
+            // Total images = 1 logo + 8 stickers = 9
+            const totalImages = 1 + Object.keys(STICKER_PATHS).length;
+
+            function onImageLoaded() {
+                imagesLoaded++;
+                if (imagesLoaded === totalImages) {
+                    generateBtn.disabled = false;
+                    generateBtn.textContent = "1. Generar Imagen";
+                    generateImage();
+                }
             }
 
             const logoDataUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(LOGO_SVG_STRING);
-            logoImage.onload = enableButton; 
+            logoImage.onload = onImageLoaded; 
             logoImage.onerror = () => {
                 console.error("Error al cargar el logo SVG principal.");
-                enableButton(); 
+                onImageLoaded(); 
             };
             logoImage.src = logoDataUrl;
             logoContainer.innerHTML = `<img src="${logoDataUrl}" alt="Logo Afore Coppel" class="h-16 object-contain">`;
             
+            // Cargar las imagenes de los stickers
+            for (const key in STICKER_PATHS) {
+                const path = STICKER_PATHS[key];
+                const img = new Image();
+                img.onload = onImageLoaded;
+                img.onerror = () => {
+                    console.error(`Error al cargar el sticker: ${path}`);
+                    onImageLoaded();
+                }
+                img.src = path;
+                STICKER_IMAGES[key] = img;
+            }
+
             STAGES.forEach(stage => {
                 const option = document.createElement('option');
                 option.value = stage.id;
@@ -287,88 +322,22 @@
                 ctx.restore();
             }
 
-            function drawSimpleIcon(ctx, type, x, y, size) {
-                ctx.save();
-                ctx.strokeStyle = "#9CA3AF"; 
-                ctx.fillStyle = "#9CA3AF";
-                ctx.lineWidth = 2;
-                const half = size / 2;
-
-                switch(type) {
-                    case 'etapa1': // Documento
-                        ctx.strokeRect(x - half + 4, y - half, size - 8, size);
-                        ctx.beginPath();
-                        ctx.moveTo(x - half + 8, y - half + 8);
-                        ctx.lineTo(x + half - 8, y - half + 8);
-                        ctx.moveTo(x - half + 8, y);
-                        ctx.lineTo(x + half - 8, y);
-                        ctx.moveTo(x - half + 8, y + half - 8);
-                        ctx.lineTo(x + half - 8, y + half - 8);
-                        ctx.stroke();
-                        break;
-                    case 'etapa2': // Lupa
-                        ctx.beginPath();
-                        ctx.arc(x - 4, y - 4, half - 4, 0, Math.PI * 2);
-                        ctx.stroke();
-                        ctx.beginPath();
-                        ctx.moveTo(x + 2, y + 2);
-                        ctx.lineTo(x + half, y + half);
-                        ctx.stroke();
-                        break;
-                    case 'etapa3': // Base de datos / info
-                        ctx.strokeRect(x - half + 2, y - half + 4, size - 4, size / 4);
-                        ctx.strokeRect(x - half + 2, y - 2, size - 4, size / 4);
-                        ctx.strokeRect(x - half + 2, y + half - size/4 - 4, size - 4, size / 4);
-                        break;
-                    case 'etapa4': // Check/Decision
-                         ctx.strokeRect(x - half + 4, y - half, size - 8, size);
-                         ctx.beginPath();
-                         ctx.moveTo(x - 4, y);
-                         ctx.lineTo(x, y + 4);
-                         ctx.lineTo(x + 6, y - 6);
-                         ctx.stroke();
-                        break;
-                    case 'etapa5': // Usuario
-                        ctx.beginPath();
-                        ctx.arc(x, y - 6, 6, 0, Math.PI * 2);
-                        ctx.stroke();
-                        ctx.beginPath();
-                        ctx.arc(x, y + 12, 10, Math.PI, 0);
-                        ctx.stroke();
-                        break;
-                    case 'etapa6': // Dinero
-                        ctx.beginPath();
-                        ctx.arc(x, y, half, 0, Math.PI * 2);
-                        ctx.stroke();
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.font = 'bold 16px sans-serif';
-                        ctx.fillText('$', x, y + 1);
-                        break;
-                    case 'etapa7': // Bandera
-                        ctx.beginPath();
-                        ctx.moveTo(x - half + 5, y + half);
-                        ctx.lineTo(x - half + 5, y - half);
-                        ctx.lineTo(x + half - 5, y - half + 6);
-                        ctx.lineTo(x - half + 5, y - half + 12);
-                        ctx.stroke();
-                        break;
-                    case 'etapa8': // Sobre/Notificación
-                        ctx.strokeRect(x - half, y - half + 4, size, size - 8);
-                        ctx.beginPath();
-                        ctx.moveTo(x - half, y - half + 4);
-                        ctx.lineTo(x, y + 4);
-                        ctx.lineTo(x + half, y - half + 4);
-                        ctx.stroke();
-                        break;
-                    default:
-                        ctx.fillRect(x - half, y - half, size, size);
-                }
-                ctx.restore();
-            }
-
+            // Reverted to drawImage for stickers
             function drawIcon(ctx, imageKey, x, y, size) {
-                drawSimpleIcon(ctx, imageKey, x, y, size);
+                const img = STICKER_IMAGES[imageKey];
+                if (!img || img.width === 0) {
+                    // Fallback if image fails to load (e.g. in preview without files)
+                     ctx.save();
+                     ctx.fillStyle = '#E5E7EB';
+                     ctx.fillRect(x - size / 2, y - size / 2, size, size);
+                     ctx.restore();
+                     return;
+                }
+                ctx.save();
+                const drawX = x - size / 2;
+                const drawY = y - size / 2;
+                ctx.drawImage(img, drawX, drawY, size, size);
+                ctx.restore();
             }
 
        
@@ -558,7 +527,7 @@
                     let titleStartY = cardY + 80; 
                     if (!stage.note) {
                         // CAMBIO: Ajusté el desplazamiento a 30 (antes 40) para la nueva altura
-                        titleStartY += 35; 
+                        titleStartY += 30; 
                     }
 
                     const titleEndY = drawStyledText(
@@ -573,8 +542,8 @@
                     if (stage.note) {
                         drawStyledText(
                             ctx, stage.note,
-                            // CAMBIO: Aumenté la separación a 25px para despegar la nota del título
-                            cardX + 20, titleEndY + 25, CARD_WIDTH - 40, 18, 
+                            // CAMBIO: Ajusté la separación a 15px para un layout más compacto
+                            cardX + 20, titleEndY + 15, CARD_WIDTH - 40, 18, 
                             "italic 12px Montserrat", 
                             COLORS.TEXT_SECONDARY,
                             "Nota:", 
@@ -761,3 +730,4 @@
 
 </body>
 </html>
+
