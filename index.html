@@ -6,7 +6,7 @@
     <title>Generador de Estatus de Separación V2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
         body {
             font-family: 'Montserrat', sans-serif;
         }
@@ -30,12 +30,10 @@
             Genera la imagen personalizada del estado del trámite.
         </p>
 
-        
-
-<form id="generatorForm" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10 items-end">
+        <form id="generatorForm" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10 items-end">
             <div class="md:col-span-1">
                 <label for="nameInput" class="block text-sm font-semibold text-gray-800 mb-1">
-                    Nombre del Trabajador
+                    Nombre del Cliente
                 </label>
                 <input type="text" id="nameInput" value="Juan Pérez" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-all">
             </div>
@@ -45,8 +43,8 @@
                     Selecciona la Etapa Actual
                 </label>
                 <select id="stageSelect" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-white focus:ring-blue-500 focus:border-blue-500 transition-all">
-                    
-</select>
+                    <!-- Las opciones se llenarán dinámicamente con JS -->
+                </select>
             </div>
             
             <div class="md:col-span-1">
@@ -61,9 +59,7 @@
             </button>
         </form>
 
-        
-
-<div class="border border-gray-300 rounded-xl overflow-hidden shadow-xl bg-gray-50 p-4">
+        <div class="border border-gray-300 rounded-xl overflow-hidden shadow-xl bg-gray-50 p-4">
             <canvas id="timelineCanvas" class="w-full h-auto block mx-auto"></canvas>
             
             <a id="downloadBtn" href="#" download="estatus_separacion.png" class="hidden w-full bg-green-600 text-white p-3 rounded-lg font-bold text-lg hover:bg-green-700 transition-all shadow-lg text-center mt-6 transform hover:scale-105">
@@ -74,20 +70,7 @@
     </div> 
 
 <script type="module">
-      
-        const STICKER_PATHS = {
-            etapa1: 'Lineadeltiemposeparacion/etapa-1.svg', // 1. Revisión
-            etapa2: 'Lineadeltiemposeparacion/etapa-2.svg', // 2. Análisis
-            etapa3: 'Lineadeltiemposeparacion/etapa-3.svg', // 3. Recopilación
-            etapa4: 'Lineadeltiemposeparacion/etapa-4.svg', // 4. Concluido
-            etapa5: 'Lineadeltiemposeparacion/etapa-5.svg', // 5. Actualización Info
-            etapa6: 'Lineadeltiemposeparacion/etapa-6.svg', // 6. Actualización Saldos
-            etapa7: 'Lineadeltiemposeparacion/etapa-7.svg', // 7. Etapa Final
-            etapa8: 'Lineadeltiemposeparacion/etapa-8.svg'  // 8. Notificación
-        };
-        
-        const STICKER_IMAGES = {};
-
+        // --- Datos y Constantes ---
         const CUSTOM_ICON_LIGHTBULB = {
             bulb: new Path2D("M81.5259 39.8469C81.5259 18.1831 63.1531 0.665953 40.6228 1.00484C19.2804 1.32523 1.72496 17.9551 1.02248 38.5345C0.722336 47.3084 3.44282 55.4539 8.25157 62.0837C14.4653 70.6482 17.6392 80.9194 17.6392 91.3693V91.7821H64.8901V91.3693C64.8901 80.9625 67.9874 70.6913 74.2011 62.1823C78.8118 55.8668 81.5259 48.1649 81.5259 39.8469Z"),
             base: new Path2D("M17.8203 90.6953V104.922C17.8203 111.461 23.4535 116.762 30.4025 116.762H31.4435C32.7273 119.268 35.4417 120.999 38.5968 120.999H45.5202C48.6753 120.999 51.3961 119.262 52.6735 116.756C59.5394 116.666 65.0768 111.407 65.0768 104.928V90.6953H17.8203Z"),
@@ -121,7 +104,14 @@
         const STAGES = [
             { id: 1, name: "1", longName: "Revisión del Trámite.", icon: 'etapa1', desc: "Estamos validando que la documentación que proporcionaste esté completa y cumpla con los requisitos necesarios para poder iniciar el proceso de separación de cuentas." },
             { id: 2, name: "2", longName: "Proceso de Análisis para determinar posible invasión.", icon: 'etapa2', desc: "Tu cuenta se encuentra en la etapa de análisis para determinar si existe alguna invasión de datos o de recursos." },
-            { id: 3, name: "3", longName: "Recopilación de la información.", icon: 'etapa3', desc: "Estamos en espera de recabar información histórica de tu cuenta individual por parte de otras administradoras." },
+            { 
+                id: 3, 
+                name: "3", 
+                longName: "Recopilación de la información.", 
+                icon: 'etapa3', 
+                desc: "Estamos en espera de recabar información histórica de tu cuenta individual por parte de otras administradoras.",
+                note: "Nota: Es posible que te contactemos vía correo electrónico y/o teléfono registrado, en caso de requerir documentación adicional para complementar tu análisis." 
+            },
             { id: 4, name: "4", longName: "Análisis concluído (procedente/no procedente).", icon: 'etapa4', desc: "Se ha concluido el ánalisis de tu trámite, el cual se ha determinado como procedente/no procedente." },
             { id: 5, name: "5", longName: "Actualización de la información de la cuenta individual.", icon: 'etapa5', desc: "Tu trámite se encuentra en la etapa de actualización de datos con base a lo confirmado en tu solicitud." },
             { id: 6, name: "6", longName: "Actualización de saldos de la cuenta individual.", icon: 'etapa6', desc: "Nos encontramos actualizando los saldos de tu cuenta individual considerando la totalidad de los recursos identificados." },
@@ -133,7 +123,10 @@
         const CANVAS_PADDING_Y_TOP = 230; 
         const CARD_GRID_PADDING = 40;
         const CARD_WIDTH = (CANVAS_WIDTH - CARD_GRID_PADDING * 5) / 4; 
-        const CARD_HEIGHT = 220;
+        
+        // CAMBIO: Subí ligeramente a 270px para dar ese "espacio de un enter" extra
+        const CARD_HEIGHT = 270; 
+        
         const CARD_RADIUS = 16;
         const NUM_COLS = 4;
         const NUM_ROWS = 2;
@@ -151,8 +144,9 @@
             '2025-12-25', // Navidad
         ];
 
-        const NOTE_AREA_HEIGHT = 130; 
-        const NOTE_TEXT = "Es importante tener en cuenta que el tiempo estimado para el proceso de Separación de Cuentas es de aproximadamente 30 días hábiles*. Sin embargo, te informamos que este periodo podría extenderse en caso de que los institutos involucrados requieran un tiempo adicional para completar las validaciones necesarias.";
+        // CAMBIO: Aumenté la altura a 125px para crear el margen inferior simétrico
+        const NOTE_AREA_HEIGHT = 125; 
+        const NOTE_TEXT = "Es importante tener en cuenta que el tiempo estimado es de 30 días hábiles*, sin embargo, la Separación de Cuentas es un proceso de alta complejidad que requiere validaciones exhaustivas. Por ello, este periodo podría extenderse si los institutos involucrados requieren tiempo adicional para garantizar la seguridad de tu patrimonio.";
         const NOTE_DEF_TITLE = "*Hábiles: ";
         const NOTE_DEF_TEXT = "Días de Lunes a Viernes, sin considerar Sábados, Domingos y días festivos.";
 
@@ -223,40 +217,20 @@
 
             startDateInput.valueAsDate = new Date();
 
-            const totalImages = 1 + Object.keys(STICKER_PATHS).length;
-            let imagesLoaded = 0;
-
-            function onImageLoaded() {
-                imagesLoaded++;
-                if (imagesLoaded === totalImages) {
-                    generateBtn.disabled = false;
-                    generateBtn.textContent = "1. Generar Imagen";
-                    generateImage();
-                }
+            function enableButton() {
+                generateBtn.disabled = false;
+                generateBtn.textContent = "1. Generar Imagen";
+                generateImage();
             }
 
             const logoDataUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(LOGO_SVG_STRING);
-            logoImage.onload = onImageLoaded; 
+            logoImage.onload = enableButton; 
             logoImage.onerror = () => {
                 console.error("Error al cargar el logo SVG principal.");
-                onImageLoaded(); 
+                enableButton(); 
             };
             logoImage.src = logoDataUrl;
             logoContainer.innerHTML = `<img src="${logoDataUrl}" alt="Logo Afore Coppel" class="h-16 object-contain">`;
-            
-        
-            for (const key in STICKER_PATHS) {
-                const path = STICKER_PATHS[key];
-                const img = new Image();
-                img.onload = onImageLoaded; 
-                img.onerror = () => {
-                    console.error(`Error al cargar el sticker: ${path}`);
-                    onImageLoaded(); 
-                };
-                img.src = path;
-                STICKER_IMAGES[key] = img; 
-            }
-            
             
             STAGES.forEach(stage => {
                 const option = document.createElement('option');
@@ -266,13 +240,12 @@
             });
             stageSelect.value = "3";
 
-           
+            
             function drawStyledText(context, text, x, y, maxWidth, lineHeight, baseFont, baseColor, highlightWord, highlightFont, highlightColor) {
                 const words = text.split(' ');
                 let currentX = x;
                 let currentY = y;
                 
-              
                 context.font = baseFont;
                 const spaceWidth = context.measureText(' ').width;
 
@@ -291,16 +264,11 @@
                     const metrics = context.measureText(word);
                     const wordWidth = metrics.width;
 
-                    
                     if (currentX + wordWidth > x + maxWidth && currentX > x) {
                         currentY += lineHeight;
                         currentX = x;
                     }
-
-                 
                     context.fillText(word, currentX, currentY);
-
-                 
                     currentX += wordWidth + spaceWidth;
                 }
                 return currentY; 
@@ -319,24 +287,88 @@
                 ctx.restore();
             }
 
-     
-            function drawIcon(ctx, imageKey, x, y, size) {
-                const img = STICKER_IMAGES[imageKey];
-                
-                if (!img || img.width === 0) {
-                    console.warn(`La imagen del sticker "${imageKey}" no se pudo dibujar.`);
-                    ctx.save();
-                    ctx.fillStyle = '#E5E7EB';
-                    ctx.fillRect(x - size / 2, y - size / 2, size, size);
-                    ctx.restore();
-                    return;
-                }
-
+            function drawSimpleIcon(ctx, type, x, y, size) {
                 ctx.save();
-                const drawX = x - size / 2;
-                const drawY = y - size / 2;
-                ctx.drawImage(img, drawX, drawY, size, size);
+                ctx.strokeStyle = "#9CA3AF"; 
+                ctx.fillStyle = "#9CA3AF";
+                ctx.lineWidth = 2;
+                const half = size / 2;
+
+                switch(type) {
+                    case 'etapa1': // Documento
+                        ctx.strokeRect(x - half + 4, y - half, size - 8, size);
+                        ctx.beginPath();
+                        ctx.moveTo(x - half + 8, y - half + 8);
+                        ctx.lineTo(x + half - 8, y - half + 8);
+                        ctx.moveTo(x - half + 8, y);
+                        ctx.lineTo(x + half - 8, y);
+                        ctx.moveTo(x - half + 8, y + half - 8);
+                        ctx.lineTo(x + half - 8, y + half - 8);
+                        ctx.stroke();
+                        break;
+                    case 'etapa2': // Lupa
+                        ctx.beginPath();
+                        ctx.arc(x - 4, y - 4, half - 4, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(x + 2, y + 2);
+                        ctx.lineTo(x + half, y + half);
+                        ctx.stroke();
+                        break;
+                    case 'etapa3': // Base de datos / info
+                        ctx.strokeRect(x - half + 2, y - half + 4, size - 4, size / 4);
+                        ctx.strokeRect(x - half + 2, y - 2, size - 4, size / 4);
+                        ctx.strokeRect(x - half + 2, y + half - size/4 - 4, size - 4, size / 4);
+                        break;
+                    case 'etapa4': // Check/Decision
+                         ctx.strokeRect(x - half + 4, y - half, size - 8, size);
+                         ctx.beginPath();
+                         ctx.moveTo(x - 4, y);
+                         ctx.lineTo(x, y + 4);
+                         ctx.lineTo(x + 6, y - 6);
+                         ctx.stroke();
+                        break;
+                    case 'etapa5': // Usuario
+                        ctx.beginPath();
+                        ctx.arc(x, y - 6, 6, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.arc(x, y + 12, 10, Math.PI, 0);
+                        ctx.stroke();
+                        break;
+                    case 'etapa6': // Dinero
+                        ctx.beginPath();
+                        ctx.arc(x, y, half, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.font = 'bold 16px sans-serif';
+                        ctx.fillText('$', x, y + 1);
+                        break;
+                    case 'etapa7': // Bandera
+                        ctx.beginPath();
+                        ctx.moveTo(x - half + 5, y + half);
+                        ctx.lineTo(x - half + 5, y - half);
+                        ctx.lineTo(x + half - 5, y - half + 6);
+                        ctx.lineTo(x - half + 5, y - half + 12);
+                        ctx.stroke();
+                        break;
+                    case 'etapa8': // Sobre/Notificación
+                        ctx.strokeRect(x - half, y - half + 4, size, size - 8);
+                        ctx.beginPath();
+                        ctx.moveTo(x - half, y - half + 4);
+                        ctx.lineTo(x, y + 4);
+                        ctx.lineTo(x + half, y - half + 4);
+                        ctx.stroke();
+                        break;
+                    default:
+                        ctx.fillRect(x - half, y - half, size, size);
+                }
                 ctx.restore();
+            }
+
+            function drawIcon(ctx, imageKey, x, y, size) {
+                drawSimpleIcon(ctx, imageKey, x, y, size);
             }
 
        
@@ -455,7 +487,7 @@
                 
                 ctx.fillStyle = COLORS.TEXT_SECONDARY;
                 ctx.font = FONTS.SUBTITLE;
-                ctx.fillText(`Trabajador: ${workerName}`, CANVAS_WIDTH / 2, 180); 
+                ctx.fillText(`Cliente: ${workerName}`, CANVAS_WIDTH / 2, 180); 
 
                 drawFlowArrows(ctx, activeStageId);
 
@@ -522,14 +554,34 @@
                         drawIcon(ctx, stage.icon, iconX, iconY, iconSize);
                     }
 
-                   
-                    drawStyledText(
+                    // --- LÓGICA DE CENTRADO VERTICAL ---
+                    let titleStartY = cardY + 80; 
+                    if (!stage.note) {
+                        // CAMBIO: Ajusté el desplazamiento a 30 (antes 40) para la nueva altura
+                        titleStartY += 35; 
+                    }
+
+                    const titleEndY = drawStyledText(
                         ctx, stage.longName, 
-                        cardX + 20, cardY + 80, CARD_WIDTH - 40, 24,
+                        cardX + 20, titleStartY, CARD_WIDTH - 40, 24,
                         (stage.id > activeStageId) ? FONTS.NOTE_TEXT : FONTS.CARD_TITLE,
                         (stage.id > activeStageId) ? COLORS.TEXT_SECONDARY : COLORS.TEXT_PRIMARY,
                         null, null, null
                     );
+
+                    // Lógica para dibujar la nota si existe
+                    if (stage.note) {
+                        drawStyledText(
+                            ctx, stage.note,
+                            // CAMBIO: Aumenté la separación a 25px para despegar la nota del título
+                            cardX + 20, titleEndY + 25, CARD_WIDTH - 40, 18, 
+                            "italic 12px Montserrat", 
+                            COLORS.TEXT_SECONDARY,
+                            "Nota:", 
+                            "bold 12px Montserrat", 
+                            COLORS.TEXT_PRIMARY
+                        );
+                    }
 
                     ctx.fillStyle = statusColor;
                     ctx.font = FONTS.CARD_STATUS;
@@ -627,7 +679,7 @@
                         COLORS.TEXT_PRIMARY  
                     );
                     
-                 
+                  
                     const defY = finalNoteY + noteLineHeight;
                     const defX = noteTextX;
 
@@ -637,10 +689,10 @@
                     ctx.textAlign = 'left';
                     ctx.fillText(NOTE_DEF_TITLE, defX, defY);
 
-                   
+                    
                     const titleWidth = ctx.measureText(NOTE_DEF_TITLE).width;
 
-                   
+                    
                     ctx.font = FONTS.NOTE_TEXT;
                     ctx.fillStyle = COLORS.NOTE_TEXT; 
                     ctx.fillText(NOTE_DEF_TEXT, defX + titleWidth, defY);
@@ -679,10 +731,10 @@
                     console.error("Error al exportar el canvas:", err);
                 }
             }
-           
+            
             generateBtn.addEventListener('click', generateImage);
 
-           
+            
             if (CanvasRenderingContext2D.prototype.roundRect === undefined) {
                 CanvasRenderingContext2D.prototype.roundRect = function (x, y, width, height, radius) {
                     if (typeof radius === 'number') {
